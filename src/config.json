@@ -1,6 +1,6 @@
 {
   "taskVersion": "1.0.0",
-  "taskName": "labjswrapper",
+  "taskName": "PRL-Task",
   "debug": false,
   "awsLambda": {
     "saveTaskData": {
