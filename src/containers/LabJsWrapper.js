@@ -53,7 +53,13 @@ class LabJsWrapper extends Component {
   }
 
   processLabJsData(labJsData) {
-    const processedData = [];
+    const processedData = [participantId,
+                choice,
+                outcome,
+                totalPoints,
+                rewardProbFractal1,
+                rewardProbFractal2,
+                decisionTime];
 
     // Always keep entry 0 of labjs data since it contains useful metadata
     processedData.push(labJsData[0]);
