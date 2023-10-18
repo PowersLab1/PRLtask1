@@ -53,15 +53,17 @@ class LabJsWrapper extends Component {
   }
 
   processLabJsData(labJsData) {
-    const processedData = [participantId,
-                choice,
-                outcome,
-                totalPoints,
-                rewardProbFractal1,
-                rewardProbFractal2,
-                decisionTime]; //THIS IS THE ONLY PART OF THE LabJsWrapper.js SCRIPT THAT I HAVE CHANGED!!! CONSIDER REMOVING!
-
-    // Always keep entry 0 of labjs data since it contains useful metadata
+    const processedData = []; //THIS IS SUPPOSED TO BE MODIFIED TO MAKE SURE THAT IT CONTAINS ALL THE DATA WE NEED BUT LATER LINE labJsData[0] suggests only 1st object returned!
+ //here are the arrays that I would tell it to make sure it's keeping
+    //participantId,
+                //choice,
+                //outcome,
+                //totalPoints,
+                //rewardProbFractal1,
+                //rewardProbFractal2,
+                //decisionTime
+    
+      // Always keep entry 0 of labjs data since it contains useful metadata
     processedData.push(labJsData[0]);
 
     // Do other processing here
@@ -71,7 +73,10 @@ class LabJsWrapper extends Component {
 
     return processedData;
   }
-
+ // ALTERNATIVELY REPLACE ABOVE WITH THIS to ensure all data is returned without any processing.
+    //  function processLabJsData(data) {
+   // return data;
+//}
   componentDidMount() {
     var that = this;
     window.addEventListener('message', function(event) {
