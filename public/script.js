@@ -240,16 +240,23 @@
         },
         startNextTrial() {
             if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {
-                const json = JSON.stringify(this.trials, null, 2); //this converts array game.trials into a JSON string
-                const blob = new Blob([json], {type: "application/json"}); 
-                const url = URL.createObjectURL(blob); 
-                const downloadLink = document.getElementById('downloadLink');
-                downloadLink.href = url;
-                downloadLink.download = 'results.json';
-                downloadLink.style.display = 'block'; //the above lines take the JSON string and make  it accessible by a download link. 
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'labjs.data',
+                        json: JSON.stringify(this.trials)
+                    }, '*');
+                }
                 document.getElementById('completion-message').style.display = 'block';
                 document.getElementById('game-container').style.display = 'none';
-            } else if (this.trials.length === this.trialLimits.slice(0, this.currentProbIndex + 1).reduce((a, b) => a + b, 0)) {
+            } 
+                //const json = JSON.stringify(this.trials, null, 2); 
+                //const blob = new Blob([json], {type: "application/json"}); 
+                //const url = URL.createObjectURL(blob); 
+                //const downloadLink = document.getElementById('downloadLink');
+                //downloadLink.href = url;
+                //downloadLink.download = 'results.json';
+                //downloadLink.style.display = 'block'; //Thes commented out lines take the JSON string and make  it accessible by a download link. 
+                 else if (this.trials.length === this.trialLimits.slice(0, this.currentProbIndex + 1).reduce((a, b) => a + b, 0)) {
                 this.switchProb();
             }
             this.startTrial();
