@@ -59,7 +59,7 @@ class LabJsWrapper extends Component {
                 totalPoints,
                 rewardProbFractal1,
                 rewardProbFractal2,
-                decisionTime];
+                decisionTime]; //THIS IS THE ONLY PART OF THE LabJsWrapper.js SCRIPT THAT I HAVE CHANGED!!! CONSIDER REMOVING!
 
     // Always keep entry 0 of labjs data since it contains useful metadata
     processedData.push(labJsData[0]);
