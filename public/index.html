@@ -3,7 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0"> ORIGINAL CHATGPT4LINE!-->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Serif|Open+Sans:300,400,600,700,800">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Probabilistic Learning Task</title>
     <style>
         body, html {
@@ -103,14 +114,18 @@
 <div id="root"></div>
 
 <div id="start-screen">
-    Please enter your unique Participant Record ID and then press ENTER
+    Please enter the Record ID you were shown on the previous page and then press ENTER
     <input type="text" id="participant-id">
 </div>
 
 <div id="instruction-screen" style="display: none;">
    <p>Welcome to the game!</p>
     
-    <p>You will be presented with an image on the left and one on the right. You will be asked to pick one. Picking an image wins you money, but one image gives you more money than the other.</p>
+    <p>You will be presented with an image on the left and one on the right. You will be asked to pick one. </p>
+    
+    <p>Press '1' for the LEFT and '2' for the RIGHT image</p>
+
+    <p>Picking an image wins you money, but one image gives you more money than the other.</p>
 
     <p>NOTE: the image which gives you more money may SWITCH as the game continues!</p>
 
@@ -139,6 +154,10 @@
 </div>
 
 <script>
+    // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
+    const interTrialInterval = 100; // Time in milliseconds for the fixation cross inter-trial-interval
+    const feedbackDisplayTime = 100; // Time in milliseconds for the feedback display
+    const timeoutDuration = 100; // Time in milliseconds until the timeout is active
     const participantIdInput = document.getElementById('participant-id');
     const startScreen = document.getElementById('start-screen');
     const instructionScreen = document.getElementById('instruction-screen');
@@ -187,7 +206,7 @@
             document.getElementById('feedback').style.display = 'none';
             document.getElementById('points').style.display = 'none';
             document.getElementById('fixation-cross').style.display = 'none';
-            this.timeout = setTimeout(() => this.endTrial(-999, 0, 5000), 5000);
+            this.timeout = setTimeout(() => this.endTrial(-999, 0, timeoutDuration), timeoutDuration);//make sure these last 2 numbers are eventually 5000 to make it say too slow after 5000ms
             document.addEventListener('keydown', this.keydownHandler);
         },
         endTrial(choice, outcome, decisionTime) {
@@ -242,8 +261,8 @@
                 document.getElementById('fixation-cross').style.display = 'block';
                 setTimeout(() => {
                     this.startNextTrial();
-                }, 1500);
-            }, 2000);
+                }, interTrialInterval); //this used to be 1500ms
+            }, feedbackDisplayTime); //this used to be 2000ms
         },
         startNextTrial() {
             if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {

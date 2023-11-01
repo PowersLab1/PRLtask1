@@ -30,8 +30,13 @@
         }
 
         #game-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-        }
+            color: white;
+        }/*alternatively, use just 'text-align: center;'' but this shifts game-container to the right  */ 
 
         .fractal {
             max-width: 300px;
@@ -95,15 +100,21 @@
 
 <body>
 
+<div id="root"></div>
+
 <div id="start-screen">
-    Please enter your unique Participant Record ID and then press ENTER
+    Please enter the Record ID you were shown on the previous page and then press ENTER
     <input type="text" id="participant-id">
 </div>
 
 <div id="instruction-screen" style="display: none;">
    <p>Welcome to the game!</p>
     
-    <p>You will be presented with an image on the left and one on the right. You will be asked to pick one. Picking an image wins you money, but one image gives you more money than the other.</p>
+    <p>You will be presented with an image on the left and one on the right. You will be asked to pick one. </p>
+    
+    <p>Press '1' for the LEFT and '2' for the RIGHT image</p>
+
+    <p>Picking an image wins you money, but one image gives you more money than the other.</p>
 
     <p>NOTE: the image which gives you more money may SWITCH as the game continues!</p>
 
@@ -132,6 +143,10 @@
 </div>
 
 <script>
+    //Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
+    const interTrialInterval = 100; // Time in milliseconds for the fixation cross inter-trial-interval
+    const feedbackDisplayTime = 100; // Time in milliseconds for the feedback display
+    const timeoutDuration = 100; // Time in milliseconds until the timeout is active
     const participantIdInput = document.getElementById('participant-id');
     const startScreen = document.getElementById('start-screen');
     const instructionScreen = document.getElementById('instruction-screen');
@@ -180,7 +195,7 @@
             document.getElementById('feedback').style.display = 'none';
             document.getElementById('points').style.display = 'none';
             document.getElementById('fixation-cross').style.display = 'none';
-            this.timeout = setTimeout(() => this.endTrial(-999, 0, 5000), 5000);
+            this.timeout = setTimeout(() => this.endTrial(-999, 0, timeoutDuration), timeoutDuration);//make sure these last 2 numbers are eventually 5000 to make it say too slow after 5000ms
             document.addEventListener('keydown', this.keydownHandler);
         },
         endTrial(choice, outcome, decisionTime) {
@@ -235,17 +250,19 @@
                 document.getElementById('fixation-cross').style.display = 'block';
                 setTimeout(() => {
                     this.startNextTrial();
-                }, 1500);
-            }, 2000);
+                }, interTrialInterval); //this used to be 1500ms
+            }, feedbackDisplayTime); //this used to be 2000ms
         },
         startNextTrial() {
             if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {
+                console.log(this.trials);//this ensures data also gets logged to the user's console as lab.js wrapper seems to like
+
                 if (window.parent !== window) {
                     window.parent.postMessage({
                         type: 'labjs.data',
                         json: JSON.stringify(this.trials)
                     }, '*');
-                }
+                }//ChatGPT4 recommends this be used so that data is handled correctly by the lab.jswrapper. 
                 document.getElementById('completion-message').style.display = 'block';
                 document.getElementById('game-container').style.display = 'none';
             } 
