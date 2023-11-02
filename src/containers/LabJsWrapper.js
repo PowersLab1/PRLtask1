@@ -35,7 +35,7 @@ class LabJsWrapper extends Component {
       this.addScript(process.env.PUBLIC_URL + '/external/lab.js', () => {
         // If we add this script tag before lab.js loads, then the
         // script will not be able to find the lab module.
-        this.addScript(process.env.PUBLIC_URL + '/script.js');//original wrapper uses  '/script.js'
+        this.addScript(process.env.PUBLIC_URL + '/index.html');//original wrapper uses  '/script.js'
       });
     }
   }
