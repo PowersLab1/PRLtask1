@@ -128,4 +128,14 @@ const game = {
 };
 
 game.keydownHandler = (event) => {
-    if (game.currentState === "cho
+    if (game.currentState === "choosing" && (event.key === "1" || event.key === "2")) {
+        clearTimeout(game.timeout);
+        
+        const choice = event.key === "1" ? 1 : 2;
+        const {fractal1, fractal2} = game.rewardProbs[game.currentProbIndex];
+        const prob = choice === 1 ? fractal1 : fractal2;
+        const outcome = Math.random() < prob ? 1 : 0;
+        const decisionTime = Date.now() - game.trialStart;
+        game.endTrial(choice, outcome, decisionTime);
+    }
+};
