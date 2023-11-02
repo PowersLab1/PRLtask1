@@ -6,15 +6,16 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> ORIGINAL CHATGPT4LINE!
-    <!--<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Serif|Open+Sans:300,400,600,700,800">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">  ORIGINAL CHATGPT4LINE! -->
+    <!--lines below utnil title are from default index.html file-->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Serif|Open+Sans:300,400,600,700,800">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="manifest" href="/manifest.json">
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />-->
+    />
     <title>Probabilistic Learning Task</title>
     <style>
         body, html {
@@ -153,157 +154,7 @@
     <a href="#" id="downloadLink" style="display: none;">Download Results</a>
 </div>
 
-<script>
-    // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
-    const interTrialInterval = 100; // Time in milliseconds for the fixation cross inter-trial-interval
-    const feedbackDisplayTime = 100; // Time in milliseconds for the feedback display
-    const timeoutDuration = 100; // Time in milliseconds until the timeout is active
-    const participantIdInput = document.getElementById('participant-id');
-    const startScreen = document.getElementById('start-screen');
-    const instructionScreen = document.getElementById('instruction-screen');
-    let participantId = '';
-
-    participantIdInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && participantIdInput.value.trim() !== '') {
-            participantId = participantIdInput.value.trim();
-            startScreen.style.display = 'none';
-            instructionScreen.style.display = 'block';
-        }
-    });
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === '1' && instructionScreen.style.display === 'block') {
-            instructionScreen.style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            game.startTrial();
-        }
-    });
-
-    const game = {
-        currentState: "choosing",
-        trialStart: null,
-        trials: [],
-        totalPoints: 0,
-        rewardProbs: [
-            {fractal1: 0.75, fractal2: 0.25},
-            {fractal1: 0.25, fractal2: 0.75},
-            {fractal1: 0.75, fractal2: 0.25},
-            {fractal1: 0.25, fractal2: 0.75},
-            {fractal1: 0.75, fractal2: 0.25},
-        ],
-        currentProbIndex: 0,
-        trialLimits: [55, 45, 20, 20, 20],
-        timeout: null,
-        keydownHandler: null,
-        switchProb() {
-            this.currentProbIndex++;
-        },
-        startTrial() {
-            this.currentState = "choosing";
-            this.trialStart = Date.now();
-            document.getElementById('fractals').style.display = 'block';
-            document.getElementById('instruction').style.display = 'block';
-            document.getElementById('feedback').style.display = 'none';
-            document.getElementById('points').style.display = 'none';
-            document.getElementById('fixation-cross').style.display = 'none';
-            this.timeout = setTimeout(() => this.endTrial(-999, 0, timeoutDuration), timeoutDuration);//make sure these last 2 numbers are eventually 5000 to make it say too slow after 5000ms
-            document.addEventListener('keydown', this.keydownHandler);
-        },
-        endTrial(choice, outcome, decisionTime) {
-            clearTimeout(this.timeout);
-            document.removeEventListener('keydown', this.keydownHandler);
-            
-            const indicator = document.getElementById(choice === 1 ? 'left-indicator' : 'right-indicator');
-            indicator.style.display = 'inline-block';
-            
-            setTimeout(() => {
-                indicator.style.display = 'none';
-                this.showFeedback(choice, outcome, decisionTime);
-            }, 250);
-        },
-        showFeedback(choice, outcome, decisionTime) {
-            const {fractal1, fractal2} = this.rewardProbs[this.currentProbIndex];
-            const trialData = { //This block of code shows how data is handled for each trial; all the below variables are added to the object trialData for each individual trial
-                participantId,
-                choice,
-                outcome,
-                totalPoints: this.totalPoints,
-                rewardProbFractal1: fractal1,
-                rewardProbFractal2: fractal2,
-                decisionTime
-            };
-            this.trials.push(trialData); //the trials property of the game object is an array that stores the data for each trial as the user progresses through the task. The game.trials array is initialized as an empty array. After each trial, an object containing the trial data is pushed to the game.trials array.
-
-            document.getElementById('fractals').style.display = 'none';
-            document.getElementById('instruction').style.display = 'none';
-            document.getElementById('feedback').style.display = 'block';
-            document.getElementById('points').innerText = `Winnings: ${this.totalPoints}`;
-            document.getElementById('points').style.display = 'block';
-            
-            const feedback = document.getElementById("feedback");
-            if (choice === -999) {
-                feedback.innerText = "Too slow! You get $0";
-            } else if (outcome) {
-                feedback.classList.add('positive-feedback');
-                feedback.innerText = "You get $0.75";
-                this.totalPoints += 0.75;
-            } else {
-                feedback.classList.add('negative-feedback');
-                feedback.innerText = "You get $0.25";
-                this.totalPoints -= 0.25;
-            }
-
-            setTimeout(() => {
-                feedback.classList.remove('positive-feedback');
-                feedback.classList.remove('negative-feedback');
-                feedback.style.display = 'none';
-                document.getElementById('points').style.display = 'none';
-                document.getElementById('fixation-cross').style.display = 'block';
-                setTimeout(() => {
-                    this.startNextTrial();
-                }, interTrialInterval); //this used to be 1500ms
-            }, feedbackDisplayTime); //this used to be 2000ms
-        },
-        startNextTrial() {
-            if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {
-                console.log(this.trials);//this ensures data also gets logged to the user's console as lab.js wrapper seems to like
-
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        type: 'labjs.data',
-                        json: JSON.stringify(this.trials)
-                    }, '*');
-                }//ChatGPT4 recommends this be used so that data is handled correctly by the lab.jswrapper. 
-                document.getElementById('completion-message').style.display = 'block';
-                document.getElementById('game-container').style.display = 'none';
-            } 
-                //const json = JSON.stringify(this.trials, null, 2); 
-                //const blob = new Blob([json], {type: "application/json"}); 
-                //const url = URL.createObjectURL(blob); 
-                //const downloadLink = document.getElementById('downloadLink');
-                //downloadLink.href = url;
-                //downloadLink.download = 'results.json';
-                //downloadLink.style.display = 'block'; //Thes commented out lines take the JSON string and make  it accessible by a download link. 
-                 else if (this.trials.length === this.trialLimits.slice(0, this.currentProbIndex + 1).reduce((a, b) => a + b, 0)) {
-                this.switchProb();
-            }
-            this.startTrial();
-        },
-    };
-
-    game.keydownHandler = (event) => {
-        if (game.currentState === "choosing" && (event.key === "1" || event.key === "2")) {
-            clearTimeout(game.timeout);
-            
-            const choice = event.key === "1" ? 1 : 2;
-            const {fractal1, fractal2} = game.rewardProbs[game.currentProbIndex];
-            const prob = choice === 1 ? fractal1 : fractal2;
-            const outcome = Math.random() < prob ? 1 : 0;
-            const decisionTime = Date.now() - game.trialStart;
-            game.endTrial(choice, outcome, decisionTime);
-        }
-    };
-</script>
+<script src="script.js"></script>
 
 </body>
 
