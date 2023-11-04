@@ -114,18 +114,22 @@ class LabJsWrapper extends Component {
         console.log(that.state.encryptedMetadata);
         console.log(parsedData);
         that.setState({sendingData: true});
+        console.log('logging this')
         console.log(this); //added this for debugging
+        console.log('logging that')
         console.log(that); //added this for debugging
+        console.log('sending request')
         aws_saveTaskData(that.state.encryptedMetadata, that.packageDataForExport(parsedData)).then(
           () => {
-            console.log(that.surveyUrl)
-            if (that.surveyUrl) {
-              that.setState({link: that.surveyUrl});
-            } else {
+            console.log('sent data')
+            console.log(that.surveyUrl) //added for debugging
+           // if (that.surveyUrl) {
+           //   that.setState({link: that.surveyUrl});
+           // } else {
               aws_fetchLink(that.state.encryptedMetadata).then(
                 (link) => that.setState({link: link})
-              );
-            }
+              ); //wise to add some additional handling here for when backend stuff goes down -- handling errors
+           // }
           }
         );
       }
