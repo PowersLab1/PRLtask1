@@ -111,13 +111,13 @@ const game = {
     startNextTrial() {
         if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {
             console.log(this.trials);
-            if (window.parent !== window) {
+            //if (window.parent == window) {
                 console.log('in if statement for startNextTrial');
                 window.parent.postMessage({
                     type: 'labjs.data',
                     json: JSON.stringify(this.trials)
                 }, '*');
-            }
+           // }
             document.getElementById('completion-message').style.display = 'block';
             document.getElementById('game-container').style.display = 'none';
         } else if (this.trials.length === this.trialLimits.slice(0, this.currentProbIndex + 1).reduce((a, b) => a + b, 0)) {
