@@ -43,6 +43,8 @@ class LabJsWrapper extends Component {
   // labJsData should be parsed
   packageDataForExport(labJsData) {
     const exportData = {};
+    console.log('packageDataForExport');
+    console.log(labJsData);
 
     exportData.encrypted_metadata = this.state.encryptedMetadata;
     exportData.taskName = config.taskName;
@@ -53,6 +55,9 @@ class LabJsWrapper extends Component {
   }
 
   processLabJsData(labJsData) {
+    console.log('in processLabJsData');
+    console.log(labJsData[0]);
+
     const processedData = []; //THIS IS SUPPOSED TO BE MODIFIED TO MAKE SURE THAT IT CONTAINS ALL THE DATA WE NEED BUT LATER LINE labJsData[0] suggests only 1st object returned!
  //here are the arrays that I would tell it to make sure it's keeping
     //participantId,
@@ -78,11 +83,16 @@ class LabJsWrapper extends Component {
    // return data;
 //}
   componentDidMount() {
+    console.log('in compondentDidMount');
+    console.log(that.state.encryptedMetadata);
+    
     var that = this;
     window.addEventListener('message', function(event) {
+      console.log('in EventListener');
+
       if (event.data.type === 'labjs.data') {
         const parsedData = JSON.parse(event.data.json);
-
+        console.log('in componentDidMount -- type = labjs.data');
         // Print out debugging info if flag is set or we're on localhost
         if (config.debug || isLocalhost) {
           console.log(parsedData);
@@ -91,12 +101,17 @@ class LabJsWrapper extends Component {
 
         // If localhost, we're done at this point
         if (isLocalhost) {
+          console.log('in islocalhost');
+          console.log(that.surveyUrl);
           if (that.surveyUrl) {
+            console.log('in that.surveyUrl');
             that.setState({link: that.surveyUrl});
           }
           return;
         }
-
+        console.log('in componentDidMount -- after if statements');
+        console.log(that.state.encryptedMetadata);
+        console.log(parsedData);
         that.setState({sendingData: true});
         aws_saveTaskData(that.state.encryptedMetadata, that.packageDataForExport(parsedData)).then(
           () => {

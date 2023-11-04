@@ -36,7 +36,7 @@ const game = {
         {fractal1: 0.75, fractal2: 0.25},
     ],
     currentProbIndex: 0,
-    trialLimits: [55, 45, 20, 20, 20],
+    trialLimits: [1, 1, 1, 1, 1], //after debugging change back to [55, 45, 20, 20, 20]
     timeout: null,
     keydownHandler: null,
     switchProb() {
@@ -111,8 +111,8 @@ const game = {
     startNextTrial() {
         if (this.trials.length === this.trialLimits.reduce((a, b) => a + b, 0)) {
             console.log(this.trials);
-
             if (window.parent !== window) {
+                console.log('in if statement for startNextTrial');
                 window.parent.postMessage({
                     type: 'labjs.data',
                     json: JSON.stringify(this.trials)
