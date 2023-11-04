@@ -114,8 +114,11 @@ class LabJsWrapper extends Component {
         console.log(that.state.encryptedMetadata);
         console.log(parsedData);
         that.setState({sendingData: true});
+        console.log(this); //added this for debugging
+        console.log(that); //added this for debugging
         aws_saveTaskData(that.state.encryptedMetadata, that.packageDataForExport(parsedData)).then(
           () => {
+            console.log(that.surveyUrl)
             if (that.surveyUrl) {
               that.setState({link: that.surveyUrl});
             } else {
@@ -127,8 +130,7 @@ class LabJsWrapper extends Component {
         );
       }
     });
-  console.log(this);
-  console.log(that);
+  
   }
 
   addScript(src, callback) {
