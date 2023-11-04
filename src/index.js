@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { Router as Router } from "react-router-dom";
-//import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";//LIKELY NEED TO REMOVE THIS
 import { createBrowserHistory } from 'history';
-
 export const history = createBrowserHistory();
+console.log('render react');
 ReactDOM.render(
     <Router history={history} basename={process.env.PUBLIC_URL}>
       <App />

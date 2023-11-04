@@ -14,6 +14,7 @@ require('questlib');
 
 class LabJsWrapper extends Component {
   constructor(props) {
+    console.log('LabJsWrapperconstructor');
     super(props);
 
     // Parse get params for encrypted metadata
