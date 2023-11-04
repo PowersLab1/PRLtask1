@@ -113,7 +113,7 @@ const game = {
             console.log(this.trials);
             //if (window.parent == window) {
                 console.log('in if statement for startNextTrial');
-                window.parent.postMessage({
+                window.postMessage({ //used to be window.parent.postMessage...
                     type: 'labjs.data',
                     json: JSON.stringify(this.trials)
                 }, '*');

@@ -85,7 +85,7 @@ class LabJsWrapper extends Component {
 //}
   componentDidMount() {
     console.log('in compondentDidMount');
-    console.log(that.state.encryptedMetadata);
+    //console.log(that.state.encryptedMetadata);//this was in the original code
     
     var that = this;
     window.addEventListener('message', function(event) {
@@ -127,7 +127,8 @@ class LabJsWrapper extends Component {
         );
       }
     });
-
+  console.log(this);
+  console.log(that);
   }
 
   addScript(src, callback) {
