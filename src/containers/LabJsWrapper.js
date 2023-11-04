@@ -123,16 +123,19 @@ class LabJsWrapper extends Component {
           () => {
             console.log('sent data')
             console.log(that.surveyUrl) //added for debugging
-           // if (that.surveyUrl) {
-           //   that.setState({link: that.surveyUrl});
-           // } else {
+            if (that.surveyUrl) {
+              that.setState({link: that.surveyUrl});
+            } else {
               aws_fetchLink(that.state.encryptedMetadata).then(
                 (link) => that.setState({link: link})
               ); //wise to add some additional handling here for when backend stuff goes down -- handling errors
-           // }
+            }
           }
         );
       }
+      aws_fetchLink(that.state.encryptedMetadata).then(
+        (link) => that.setState({link: link})
+      );
     });
   
   }
