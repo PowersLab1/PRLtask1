@@ -1,7 +1,7 @@
 // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
-const interTrialInterval = 100; // Time in milliseconds for the fixation cross inter-trial-interval
-const feedbackDisplayTime = 100; // Time in milliseconds for the feedback display
-const timeoutDuration = 100; // Time in milliseconds until the timeout is active
+const interTrialInterval = 750; // Time in milliseconds for the fixation cross inter-trial-interval
+const feedbackDisplayTime = 1000; // Time in milliseconds for the feedback display
+const timeoutDuration = 5000; // Time in milliseconds until the timeout is active
 const participantIdInput = document.getElementById('participant-id');
 const startScreen = document.getElementById('start-screen');
 const instructionScreen = document.getElementById('instruction-screen');
@@ -36,7 +36,7 @@ const game = {
         {fractal1: 0.75, fractal2: 0.25},
     ],
     currentProbIndex: 0,
-    trialLimits: [1, 1, 1, 1, 1], //after debugging change back to [55, 45, 20, 20, 20]
+    trialLimits: [55, 45, 20, 20, 20],
     timeout: null,
     keydownHandler: null,
     switchProb() {
