@@ -56,33 +56,34 @@ class LabJsWrapper extends Component {
   }
 
   processLabJsData(labJsData) {
-    console.log('in processLabJsData');
-    console.log(labJsData[0]);
-
-    const processedData = []; //THIS IS SUPPOSED TO BE MODIFIED TO MAKE SURE THAT IT CONTAINS ALL THE DATA WE NEED BUT LATER LINE labJsData[0] suggests only 1st object returned!
+    return labJsData;
+  }
+    //const processedData = []; //THIS IS SUPPOSED TO BE MODIFIED TO MAKE SURE THAT IT CONTAINS ALL THE DATA WE NEED BUT LATER LINE labJsData[0] suggests only 1st object returned!
  //here are the arrays that I would tell it to make sure it's keeping
-    //participantId,
+   
+    
+      // Always keep entry 0 of labjs data since it contains useful metadata
+   // processedData.push(labJsData[0]);
+
+    // Do other processing here
+    // processedData.push(...);
+
+   // processedData.push()
+
+   // return processedData;
+  //}
+ // ALTERNATIVELY REPLACE ABOVE WITH THIS to ensure all data is returned without any processing.
+    //  function processLabJsData(data) {
+   // return data;
+//}
+
+ //participantId,
                 //choice,
                 //outcome,
                 //totalPoints,
                 //rewardProbFractal1,
                 //rewardProbFractal2,
                 //decisionTime
-    
-      // Always keep entry 0 of labjs data since it contains useful metadata
-    processedData.push(labJsData[0]);
-
-    // Do other processing here
-    // processedData.push(...);
-
-    processedData.push()
-
-    return processedData;
-  }
- // ALTERNATIVELY REPLACE ABOVE WITH THIS to ensure all data is returned without any processing.
-    //  function processLabJsData(data) {
-   // return data;
-//}
   componentDidMount() {
     console.log('in compondentDidMount');
     //console.log(that.state.encryptedMetadata);//this was in the original code
