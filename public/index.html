@@ -51,11 +51,18 @@
         }/*alternatively, use just 'text-align: center;'' but this shifts game-container to the right  */ 
 
         .fractal {
+            max-width: 200px; /* Adjusted for three images */
+            height: auto;
+            margin: 0 10px; /* Reduced margin */
+            display: inline-block;
+        }
+
+        /* .fractal {
             max-width: 300px;
             height: auto;
             margin: 0 20px;
             display: inline-block;
-        }
+        } */
 
         #feedback, #points {
             display: none;
@@ -79,14 +86,23 @@
             display: none;
             color: white;
         }
-
         .indicator {
+             width: 50px;
+             height: 20px; /* Adjusted height */
+             background-color: orange;
+             display: none;
+             position: absolute;
+             top: calc(50% + 150px); /* Position it below the image */
+        }
+
+
+        /* .indicator {
             width: 50px;
             height: 300px;
             background-color: orange;
             display: none;
             position: absolute;
-        }
+        } */
 
         #left-indicator {
             right: calc(60% + 160px);
@@ -141,6 +157,7 @@
         <div class="indicator" id="left-indicator"></div>
         <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal1.png" class="fractal" id="fractal1">
         <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal13.png" class="fractal" id="fractal2">
+        <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal10.png" class="fractal" id="fractal3">
         <div class="indicator" id="right-indicator"></div>
     </div>
     <div id="feedback"></div>

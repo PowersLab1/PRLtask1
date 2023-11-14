@@ -1,7 +1,7 @@
 // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
-const interTrialInterval = 100; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
-const feedbackDisplayTime = 100; // change back to 1000 Time in milliseconds for the feedback display
-const timeoutDuration = 100; // change back to 5000 Time in milliseconds until the timeout is active
+const interTrialInterval = 750; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
+const feedbackDisplayTime = 3000; // change back to 3000 Time in milliseconds for the feedback display
+const timeoutDuration = 5000; // change back to 5000 Time in milliseconds until the timeout is active
 const participantIdInput = document.getElementById('participant-id');
 const startScreen = document.getElementById('start-screen');
 const instructionScreen = document.getElementById('instruction-screen');
@@ -29,11 +29,11 @@ const game = {
     trials: [],
     totalPoints: 0,
     rewardProbs: [
-        {fractal1: 0.75, fractal2: 0.25},
-        {fractal1: 0.25, fractal2: 0.75},
-        {fractal1: 0.75, fractal2: 0.25},
-        {fractal1: 0.25, fractal2: 0.75},
-        {fractal1: 0.75, fractal2: 0.25},
+        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
+        {fractal1: 0.25, fractal2: 0.75, fractal3: 0.50},
+        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
+        {fractal1: 0.25, fractal2: 0.75, fractal3: 0.50},
+        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
     ],
     currentProbIndex: 0,
     trialLimits: [5, 5, 5, 5, 5],//change back to [55, 45, 20, 20, 20]
@@ -128,14 +128,38 @@ const game = {
 };
 
 game.keydownHandler = (event) => {
-    if (game.currentState === "choosing" && (event.key === "1" || event.key === "2")) {
-        clearTimeout(game.timeout);
-        
-        const choice = event.key === "1" ? 1 : 2;
-        const {fractal1, fractal2} = game.rewardProbs[game.currentProbIndex];
-        const prob = choice === 1 ? fractal1 : fractal2;
+    // Check if the current state is 'choosing' and if key '1', '2', or '3' is pressed
+    if (game.currentState === "choosing" && (event.key === "1" || event.key === "2" || event.key === "3")) {
+        clearTimeout(game.timeout); // Clear the timeout to avoid end of trial due to timeout
+
+        // Determine the choice based on the key pressed
+        const choice = event.key === "1" ? 1 : (event.key === "2" ? 2 : 3);
+
+        // Get the reward probabilities for the current trial
+        const {fractal1, fractal2, fractal3} = game.rewardProbs[game.currentProbIndex];
+
+        // Determine the probability based on the chosen fractal
+        const prob = choice === 1 ? fractal1 : (choice === 2 ? fractal2 : fractal3);
+
+        // Calculate the outcome: 1 for reward, 0 for no reward
         const outcome = Math.random() < prob ? 1 : 0;
+
+        // Calculate the decision time
         const decisionTime = Date.now() - game.trialStart;
+
+        // End the trial with the choice, outcome, and decision time
         game.endTrial(choice, outcome, decisionTime);
     }
 };
+
+// game.keydownHandler = (event) => {
+//     if (game.currentState === "choosing" && (event.key === "1" || event.key === "2")) {
+//         clearTimeout(game.timeout);
+//         const choice = event.key === "1" ? 1 : 2;
+//         const {fractal1, fractal2} = game.rewardProbs[game.currentProbIndex];
+//         const prob = choice === 1 ? fractal1 : fractal2;
+//         const outcome = Math.random() < prob ? 1 : 0;
+//         const decisionTime = Date.now() - game.trialStart;
+//         game.endTrial(choice, outcome, decisionTime);
+//     }
+// };
