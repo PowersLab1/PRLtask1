@@ -103,14 +103,26 @@
             display: none;
             position: absolute;
         } */
-
         #left-indicator {
+            right: calc(70% + 200px); /* Adjust based on layout */
+        }
+
+        #middle-indicator {
+          left: 50%;
+          transform: translateX(-50%); /* Center below the middle fractal */
+        }
+
+        #right-indicator {
+            left: calc(30% + 200px); /* Adjust based on layout */
+        }
+
+        /* #left-indicator {
             right: calc(60% + 160px);
         }
 
         #right-indicator {
             left: calc(60% + 160px);
-        }
+        } */
 
         .positive-feedback {
             color: green;
@@ -163,6 +175,8 @@
     <div id="feedback"></div>
     <div id="points">Winnings: 0</div>
 </div>
+
+<div class="indicator" id="middle-indicator"></div>
 
 <div id="fixation-cross">+</div>
 

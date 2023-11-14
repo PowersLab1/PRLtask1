@@ -1,6 +1,6 @@
 // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
-const interTrialInterval = 750; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
-const feedbackDisplayTime = 3000; // change back to 3000 Time in milliseconds for the feedback display
+const interTrialInterval = 500; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
+const feedbackDisplayTime = 1500; // change back to 3000 Time in milliseconds for the feedback display
 const timeoutDuration = 5000; // change back to 5000 Time in milliseconds until the timeout is active
 const participantIdInput = document.getElementById('participant-id');
 const startScreen = document.getElementById('start-screen');
@@ -56,10 +56,25 @@ const game = {
     endTrial(choice, outcome, decisionTime) {
         clearTimeout(this.timeout);
         document.removeEventListener('keydown', this.keydownHandler);
-        
-        const indicator = document.getElementById(choice === 1 ? 'left-indicator' : 'right-indicator');
+       
+        // Choose the correct indicator based on the choice
+        let indicatorId;
+        if (choice === 1) {
+            indicatorId = 'left-indicator';
+        } else if (choice === 2) {
+            indicatorId = 'middle-indicator';
+        } else { // choice === 3
+            indicatorId = 'right-indicator';
+        }
+    
+        const indicator = document.getElementById(indicatorId);
         indicator.style.display = 'inline-block';
+    // endTrial(choice, outcome, decisionTime) {
+    //     clearTimeout(this.timeout);
+    //     document.removeEventListener('keydown', this.keydownHandler);
         
+    //     const indicator = document.getElementById(choice === 1 ? 'left-indicator' : 'right-indicator');
+    //     indicator.style.display = 'inline-block';
         setTimeout(() => {
             indicator.style.display = 'none';
             this.showFeedback(choice, outcome, decisionTime);
