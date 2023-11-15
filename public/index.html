@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">  ORIGINAL CHATGPT4LINE! -->
+    <!--lines below utnil title are from default index.html file-->
+    <!--<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Serif|Open+Sans:300,400,600,700,800">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="manifest" href="/manifest.json">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Probabilistic Learning Task</title>
     <style>
         body, html {
@@ -20,7 +28,7 @@
             background-color: #2d2d2d;
         }
 
-        #start-screen, #instruction-screen, #game-container {
+        #start-screen, #instruction-screen {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -33,30 +41,39 @@
             margin-top: 20px;
         }
 
-        .position-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 10px;
-        }
+        #game-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }/*alternatively, use just 'text-align: center;'' but this shifts game-container to the right  */ 
 
         .fractal {
-            max-width: 200px;
+            max-width: 200px; /* Adjusted for three images */
             height: auto;
+            margin: 0 10px; /* Reduced margin */
+            display: inline-block;
         }
 
-        .indicator {
-            width: 50px;
-            height: 20px;
-            background-color: orange;
-            display: none;
-            margin-top: 20px;
-        }
+        /* .fractal {
+            max-width: 300px;
+            height: auto;
+            margin: 0 20px;
+            display: inline-block;
+        } */
 
-        #feedback, #points, #instruction {
+        #feedback, #points {
             display: none;
             font-size: 24px;
             margin-top: 20px;
+        }
+
+        #instruction {
+            display: none;
+            font-size: 20px;
+            margin-bottom: 20px;
             color: white;
         }
 
@@ -69,6 +86,43 @@
             display: none;
             color: white;
         }
+        .indicator {
+             width: 50px;
+             height: 20px; /* Adjusted height */
+             background-color: orange;
+             display: none;
+             position: absolute;
+             top: calc(50% + 150px); /* Position it below the image */
+        }
+
+
+        /* .indicator {
+            width: 50px;
+            height: 300px;
+            background-color: orange;
+            display: none;
+            position: absolute;
+        } */
+        #left-indicator {
+            right: calc(60%); /* Adjust based on layout */
+        }
+
+        #middle-indicator {
+          left: 50%;
+          transform: translateX(-50%); /* Center below the middle fractal */
+        }
+
+        #right-indicator {
+            left: calc(40%); /* Adjust based on layout */
+        }
+
+        /* #left-indicator {
+            right: calc(60% + 160px);
+        }
+
+        #right-indicator {
+            left: calc(60% + 160px);
+        } */
 
         .positive-feedback {
             color: green;
@@ -83,41 +137,54 @@
         }
     </style>
 </head>
+
 <body>
-    <div id="root"></div>
 
-    <div id="start-screen">
-        Please enter the Record ID you were shown on the previous page and then press ENTER
-        <input type="text" id="participant-id">
-    </div>
+<div id="root"></div>
 
-    <div id="instruction-screen" style="display: none;">
-        <p>Welcome to the game!</p>
-        <p>You will be presented with 3 images on the screen. You will be asked to pick one. They will shuffle positions every 5 times you make a choice.</p>
-        <p>Press '1' for the image on the LEFT,  '2' for the one in the MIDDLE, and '3' for the one on the RIGHT</p>
-        <p>Picking an image wins you money, but one image is always the most likely to give money than the other 2.</p>
-        <p>NOTE: the image which is most likely to give money will SWITCH as the game continues!</p>
-        <p>Your goal is to win as much money as possible.</p>
-        <p>When you are ready to begin, please press "1" on your keyboard to start the game</p>
-    </div>
+<div id="start-screen">
+    Please enter the Record ID you were shown on the previous page and then press ENTER
+    <input type="text" id="participant-id">
+</div>
 
-    <div id="game-container" style="display: none;">
-        <div id="instruction">Pick the left or right image to win money!</div>
-        <div class="position-container">
-            <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal1.png" class="fractal" id="fractal1">
-            <div class="indicator" id="left-indicator"></div>
-        </div>
-        <div class="position-container">
-            <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal13.png" class="fractal" id="fractal2">
-            <div class="indicator" id="middle-indicator"></div>
-        </div>
-        <div class="position-container">
-            <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal10.png" class="fractal" id="fractal3">
-            <div class="indicator" id="right-indicator"></div>
-        </div>
-        <div id="feedback"></div>
-        <div id="points">Winnings: 0</div>
+<div id="instruction-screen" style="display: none;">
+   <p>Welcome to the game!</p>
+    
+    <p>You will be presented with 3 images on the screen. You will be asked to pick one. They will shuffle positions every 5 times you make a choice.</p>
+    
+    <p>Press '1' for the image on the LEFT,  '2' for the one in the MIDDLE, and '3' for the one on the RIGHT</p>
+
+    <p>Picking an image wins you money, but one image is always the most likely to give money than the other 2.</p>
+
+    <p>NOTE: the image which is most likely to give money will SWITCH as the game continues!</p>
+
+    <p>Your goal is to win as much money as possible.</p> 
+
+    <p>When you are ready to begin, please press "1" on your keyboard to start the game</p>
+</div>
+
+<div id="game-container" style="display: none;">
+    <div id="instruction">Pick the left or right image to win money!</div>
+    <div id="fractals">
+        <div class="indicator" id="left-indicator"></div>
+        <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal1.png" class="fractal" id="fractal1">
+        <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal13.png" class="fractal" id="fractal2">
+        <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal10.png" class="fractal" id="fractal3">
+        <div class="indicator" id="right-indicator"></div>
     </div>
+    <div id="feedback"></div>
+    <div id="points">Winnings: 0</div>
+</div>
+
+<div class="indicator" id="middle-indicator"></div>
+
+<div id="fixation-cross">+</div>
+
+<div id="completion-message" style="display: none;">
+    Task complete! Thank you for your time. You will be redirected back to RedCap soon.
+    <a href="#" id="downloadLink" style="display: none;">Download Results</a>
+</div>
+
 <script src="script.js"></script>
 
 </body>
