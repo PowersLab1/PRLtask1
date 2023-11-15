@@ -1,11 +1,18 @@
 // Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
 const interTrialInterval = 500; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
 const feedbackDisplayTime = 1500; // change back to 3000 Time in milliseconds for the feedback display
-const timeoutDuration = 5000; // change back to 5000 Time in milliseconds until the timeout is active
+const timeoutDuration = 4000; // change back to 5000 Time in milliseconds until the timeout is active
 const participantIdInput = document.getElementById('participant-id');
 const startScreen = document.getElementById('start-screen');
 const instructionScreen = document.getElementById('instruction-screen');
 let participantId = '';
+
+function shuffleArray(array) { //shuffles the fractal positions; if not working suspect we need more than array i and j
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+} 
 
 participantIdInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && participantIdInput.value.trim() !== '') {
@@ -29,11 +36,11 @@ const game = {
     trials: [],
     totalPoints: 0,
     rewardProbs: [
-        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
-        {fractal1: 0.25, fractal2: 0.75, fractal3: 0.50},
-        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
-        {fractal1: 0.25, fractal2: 0.75, fractal3: 0.50},
-        {fractal1: 0.75, fractal2: 0.25, fractal3: 0.50},
+        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
+        {fractal1: 0.20, fractal2: 0.80, fractal3: 0.50},
+        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
+        {fractal1: 0.20, fractal2: 0.80, fractal3: 0.50},
+        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
     ],
     currentProbIndex: 0,
     trialLimits: [5, 5, 5, 5, 5],//change back to [55, 45, 20, 20, 20]
@@ -81,17 +88,18 @@ const game = {
         }, 250);
     },
     showFeedback(choice, outcome, decisionTime) {
-        const {fractal1, fractal2} = this.rewardProbs[this.currentProbIndex];
-        const trialData = {
-            participantId,
-            choice,
-            outcome,
-            totalPoints: this.totalPoints,
-            rewardProbFractal1: fractal1,
-            rewardProbFractal2: fractal2,
-            decisionTime
-        };
-        this.trials.push(trialData);
+    const {fractal1, fractal2, fractal3} = this.rewardProbs[this.currentProbIndex];
+    const trialData = {
+        participantId,
+        choice,
+        outcome,
+        totalPoints: this.totalPoints,
+        rewardProbFractal1: fractal1,
+        rewardProbFractal2: fractal2,
+        rewardProbFractal3: fractal3, // Added line for fractal3 probability
+        decisionTime
+    };
+    this.trials.push(trialData);
 
         document.getElementById('fractals').style.display = 'none';
         document.getElementById('instruction').style.display = 'none';
@@ -146,22 +154,16 @@ game.keydownHandler = (event) => {
     // Check if the current state is 'choosing' and if key '1', '2', or '3' is pressed
     if (game.currentState === "choosing" && (event.key === "1" || event.key === "2" || event.key === "3")) {
         clearTimeout(game.timeout); // Clear the timeout to avoid end of trial due to timeout
-
         // Determine the choice based on the key pressed
         const choice = event.key === "1" ? 1 : (event.key === "2" ? 2 : 3);
-
         // Get the reward probabilities for the current trial
         const {fractal1, fractal2, fractal3} = game.rewardProbs[game.currentProbIndex];
-
         // Determine the probability based on the chosen fractal
         const prob = choice === 1 ? fractal1 : (choice === 2 ? fractal2 : fractal3);
-
         // Calculate the outcome: 1 for reward, 0 for no reward
         const outcome = Math.random() < prob ? 1 : 0;
-
         // Calculate the decision time
         const decisionTime = Date.now() - game.trialStart;
-
         // End the trial with the choice, outcome, and decision time
         game.endTrial(choice, outcome, decisionTime);
     }
@@ -178,3 +180,8 @@ game.keydownHandler = (event) => {
 //         game.endTrial(choice, outcome, decisionTime);
 //     }
 // };
+</script>
+
+</body>
+
+</html>
