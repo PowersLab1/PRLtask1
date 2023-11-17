@@ -1,39 +1,38 @@
-// Modify these variables for the inter-trial-interval, feedback display time, and time until timeout
+// Task parameters worth regularly modifying
 const interTrialInterval = 500; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
 const feedbackDisplayTime = 1500; // change back to 3000 Time in milliseconds for the feedback display
 const timeoutDuration = 4000; // change back to 5000 Time in milliseconds until the timeout is active
-// const participantIdInput = document.getElementById('participant-id'); //REMOVED BECAUSE NO LONGER DOING PARTICIPANT ID SCREEN!
-// const startScreen = document.getElementById('start-screen');
-// const instructionScreen = document.getElementById('instruction-screen');
-// let participantId = '';
+const highProbability = 0.75;
+const lowProbability = 0.25;
+const block1 = 30;//change the block #s to change how many trials are done prior to reversals
+const block2 = 20;
+const block3 = 10;
+const block4 = 20;
+const block5 = 15;
+const block6 = 20;
+const block7 = 25;
+const block8 = 15; // total is currently 150 trials
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
-        document.getElementById('instruction-screen').style.display = 'block';
-    });
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === '1' && document.getElementById('instruction-screen').style.display === 'block') {
-            document.getElementById('instruction-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            game.startTrial();
-        }
-    });
-
-// participantIdInput.addEventListener('keydown', (event) => {
-//     if (event.key === 'Enter' && participantIdInput.value.trim() !== '') {
-//         participantId = participantIdInput.value.trim();
-//         startScreen.style.display = 'none';
-//         instructionScreen.style.display = 'block';
-//     }
-// });
+    document.getElementById('instruction-screen1').style.display = 'block';
+});
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === '1' && document.getElementById('instruction-screen').style.display === 'block') {
-        instructionScreen.style.display = 'none';
+    if (document.getElementById('instruction-screen1').style.display === 'block') {
+        document.getElementById('instruction-screen1').style.display = 'none';
+        document.getElementById('instruction-screen2').style.display = 'block';
+    } else if (document.getElementById('instruction-screen2').style.display === 'block') {
+        document.getElementById('instruction-screen2').style.display = 'none';
+        document.getElementById('instruction-screen3').style.display = 'block';
+    } else if (document.getElementById('instruction-screen3').style.display === 'block') {
+        document.getElementById('instruction-screen3').style.display = 'none';
         document.getElementById('game-container').style.display = 'block';
         game.startTrial();
     }
 });
+
+
 
 function shuffleFractals() {
     const fractalIDs = ['fractal1', 'fractal2', 'fractal3']; // Use IDs instead of numbers
@@ -43,21 +42,25 @@ function shuffleFractals() {
     }
     return fractalIDs;
 }
+
 const game = {
     currentState: "choosing",
     trialStart: null,
     trials: [],
     totalPoints: 0,
     rewardProbs: [
-        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
-        {fractal1: 0.20, fractal2: 0.80, fractal3: 0.50},
-        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
-        {fractal1: 0.20, fractal2: 0.80, fractal3: 0.50},
-        {fractal1: 0.80, fractal2: 0.20, fractal3: 0.50},
+        {fractal1: highProbability, fractal2: lowProbability, fractal3: 0.50},
+        {fractal1: lowProbability, fractal2: highProbability, fractal3: 0.50},
+        {fractal1: highProbability, fractal2: lowProbability, fractal3: 0.50},
+        {fractal1: lowProbability, fractal2: highProbability, fractal3: 0.50},
+        {fractal1: highProbability, fractal2: lowProbability, fractal3: 0.50},
+        {fractal1: lowProbability, fractal2: highProbability, fractal3: 0.50},
+        {fractal1: highProbability, fractal2: lowProbability, fractal3: 0.50},
+        {fractal1: lowProbability, fractal2: highProbability, fractal3: 0.50},
     ],
     currentProbIndex: 0,
     currentFractalPositions: ['fractal1', 'fractal2', 'fractal3'], // Initial order
-    trialLimits: [10, 10, 10, 10, 10],//change back to [55, 45, 20, 20, 20]
+    trialLimits: [block1, block2, block3, block4, block5, block6, block7,block8],//Cole did [55, 45, 20, 20, 20]
     timeout: null,
     keydownHandler: null,
 
@@ -72,43 +75,18 @@ const game = {
         }
     });
 },
-    // updateFractalPositions() { //this one seems to run into an issue because the fractal elements are removed from their container leading to the getElementByID method not finding them after shuffling
-    // const container = document.getElementById('fractals');
-    // console.log('Current fractals before update:', container.innerHTML); // New log
-    // container.innerHTML = '';
-    // this.currentFractalPositions.forEach(fractalID => {
-    //     const fractalElement = document.getElementById(fractalID);
-    //     if (fractalElement) {
-    //         container.appendChild(fractalElement);
-    //     } else {
-    //         console.error('Fractal element not found:', fractalID);
-    //     }
-    // });
-//},
-//     updateFractalPositions() { //console error log here shows after shuffling, the updateFractalPositions function fails to find the shuffled fractals in the DOM. One possible cause could be that the shuffled IDs in this.currentFractalPositions do not match the actual IDs of the fractal elements in the DOM. 
-//     const container = document.getElementById('fractals');
-//     container.innerHTML = ''; // Clear existing fractals
-//     this.currentFractalPositions.forEach(fractalID => {
-//         const fractalElement = document.getElementById(fractalID);
-//         if (fractalElement) {
-//             container.appendChild(fractalElement); // Append only if the element is found
-//         } else {
-//             console.error('Fractal element not found:', fractalID);
-//         }
-//     });
-// },
-
-
-//     updateFractalPositions() { //ORIGINAL updateFractalPositions() -- removed cuz In this original function, fractals is an array of DOM elements, but this.currentFractalPositions now contains the IDs of the fractals (like 'fractal1', 'fractal2', 'fractal3') after modification. Therefore, fractals[position - 1] is not fetching the correct element.
-//     const fractals = [document.getElementById('fractal1'), document.getElementById('fractal2'), document.getElementById('fractal3')];
-//     const container = document.getElementById('fractals');
-//     container.innerHTML = ''; // Clear existing fractals
-//     this.currentFractalPositions.forEach(position => {
-//         container.appendChild(fractals[position - 1]); // Append fractals in new order
-//     });
-// },
     switchProb() {
         this.currentProbIndex++;
+    },
+    getCurrentBlock() {
+    let totalTrials = 0;
+    for (let i = 0; i < this.trialLimits.length; i++) {
+        totalTrials += this.trialLimits[i];
+        if (this.trials.length < totalTrials) {
+            return i + 1;
+        }
+    }
+    return this.trialLimits.length; // In case all trials are completed
     },
     startTrial() {
         this.currentState = "choosing";
@@ -154,39 +132,18 @@ const game = {
     }, 250);
 },
 
-    // endTrial(keyChoice, fractalChoice, outcome, decisionTime) { //OG script w/o debugging code
-    //     clearTimeout(this.timeout);
-    //     document.removeEventListener('keydown', this.keydownHandler);
-       
-    //     // Choose the correct indicator based on the choice
-    //     let indicatorId;
-    //     if (keyChoice === 1) {
-    //         indicatorId = 'left-indicator';
-    //     } else if (keyChoice === 2) {
-    //         indicatorId = 'middle-indicator';
-    //     } else { // keyChoice === 3
-    //         indicatorId = 'right-indicator';
-    //     }
-    
-    //     const indicator = document.getElementById(indicatorId);
-    //     indicator.style.display = 'inline-block';
-   
-    //     setTimeout(() => {
-    //         indicator.style.display = 'none';
-    //         this.showFeedback(keyChoice, fractalChoice, outcome, decisionTime);
-    //     }, 250);
-    // },
     showFeedback(keyChoice, choice, outcome, decisionTime) {
     const {fractal1, fractal2, fractal3} = this.rewardProbs[this.currentProbIndex];
+    const currentBlock = this.getCurrentBlock();
     const trialData = {
-        //participantId,
         keyChoice,
         choice,
         outcome,
+        block: currentBlock, // Add the current block
         totalPoints: this.totalPoints,
         rewardProbFractal1: fractal1,
         rewardProbFractal2: fractal2,
-        rewardProbFractal3: fractal3, // Added line for fractal3 probability
+        rewardProbFractal3: fractal3,
         decisionTime
     };
     console.log(trialData)
