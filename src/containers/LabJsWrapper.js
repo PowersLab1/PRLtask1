@@ -72,18 +72,7 @@ class LabJsWrapper extends Component {
 
    // return processedData;
   //}
- // ALTERNATIVELY REPLACE ABOVE WITH THIS to ensure all data is returned without any processing.
-    //  function processLabJsData(data) {
-   // return data;
-//}
 
- //participantId,
-                //choice,
-                //outcome,
-                //totalPoints,
-                //rewardProbFractal1,
-                //rewardProbFractal2,
-                //decisionTime
   componentDidMount() {
     console.log('in compondentDidMount');
     //console.log(that.state.encryptedMetadata);//this was in the original code
@@ -162,22 +151,22 @@ class LabJsWrapper extends Component {
       window.location.assign(this.state.link);
     }
 
-    return (
-      <div>
-        <div className="container fullscreen" data-labjs-section="main" style={{visibility: this.state.sendingData ? 'hidden' : 'visible'}}>
-          <main className="content-vertical-center content-horizontal-center">
-            <div>
-              <h2>Loading Experiment</h2>
-              <p>The experiment is loading and should start in a few seconds</p>
-            </div>
-          </main>
-        </div>
-        <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
-          <h2>Saving data... do not exit window</h2>
-        </div>
-      </div>
-    );
-  } // end render
+  //   return (
+  //     <div>
+  //       <div className="container fullscreen" data-labjs-section="main" style={{visibility: this.state.sendingData ? 'hidden' : 'visible'}}>
+  //         <main className="content-vertical-center content-horizontal-center">
+  //           <div>
+  //             <h2>Loading Experiment</h2>
+  //             <p>The experiment is loading and should start in a few seconds</p>
+  //           </div>
+  //         </main>
+  //       </div>
+  //       <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
+  //         <h2>Saving data... do not exit window</h2>
+  //       </div>
+  //     </div>
+  //   );
+  // } // end render
 } // end class
 
 export default LabJsWrapper;
