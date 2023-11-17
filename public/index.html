@@ -28,17 +28,13 @@
             background-color: #2d2d2d;
         }
 
-        #start-screen, #instruction-screen {
+        #instruction-screen {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
             color: white;
-        }
-
-        #start-screen input {
-            margin-top: 20px;
         }
 
         #game-container {
@@ -142,11 +138,6 @@
 
 <div id="root"></div>
 
-<div id="start-screen">
-    Please enter the Record ID you were shown on the previous page and then press ENTER
-    <input type="text" id="participant-id">
-</div>
-
 <div id="instruction-screen" style="display: none;">
    <p>Welcome to the game!</p>
     
@@ -164,7 +155,7 @@
 </div>
 
 <div id="game-container" style="display: none;">
-    <div id="instruction">Pick the left or right image to win money!</div>
+    <div id="instruction">Pick the luckiest picture to win the most money!</div>
     <div id="fractals">
         <div class="indicator" id="left-indicator"></div>
         <img src="https://raw.githubusercontent.com/maxsupergreenwald/PRLResources/main/resources/Fractal1.png" class="fractal" id="fractal1">
