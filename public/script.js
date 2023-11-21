@@ -2,8 +2,10 @@
 const interTrialInterval = 500; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
 const feedbackDisplayTime = 1500; // change back to 3000 Time in milliseconds for the feedback display
 const timeoutDuration = 4000; // change back to 5000 Time in milliseconds until the timeout is active
+const delayToChoose = 500; //how long participants cannot choose a stimulus (prevents button mashing)
 const highProbability = 0.75;
 const lowProbability = 0.25;
+const trialsPerShuffle = 1; //the number of trials before the fractal images shuffle position
 const block1 = 30;//change the block #s to change how many trials are done prior to reversals
 const block2 = 20;//Cole did [55, 45, 20, 20, 20]
 const block3 = 10;
@@ -101,13 +103,21 @@ const game = {
     return this.trialLimits.length; // In case all trials are completed
     },
     startTrial() {
-        this.currentState = "choosing";
+        this.currentState = "waiting"; // Change state to 'waiting'
         this.trialStart = Date.now();
+
         document.getElementById('fractals').style.display = 'block';
         document.getElementById('instruction').style.display = 'block';
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('points').style.display = 'none';
         document.getElementById('fixation-cross').style.display = 'none';
+    
+        // Delay for 200ms before accepting key presses
+        setTimeout(() => {
+            this.currentState = "choosing";
+        }, 200);
+
+        //end trial set choice to -999 if no choice within timeoutDuration
         this.timeout = setTimeout(() => this.endTrial(-999, -999, 0, timeoutDuration), timeoutDuration);//added another -999 for the 2 arguments at start of endTrial
         document.addEventListener('keydown', this.keydownHandler);
     },
@@ -192,7 +202,7 @@ const game = {
         }, feedbackDisplayTime);
     },
     startNextTrial() {
-        if (this.trials.length % 5 === 0) { // Every 5 trials, shuffle fractals
+        if (this.trials.length % trialsPerShuffle === 0) { // Every trialsPerShuffle trials, shuffle fractals
         this.currentFractalPositions = shuffleFractals();
         this.updateFractalPositions();
     }
