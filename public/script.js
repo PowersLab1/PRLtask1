@@ -1,11 +1,11 @@
-// Task parameters worth regularly modifying
+// Task parameters one might want to change
 const interTrialInterval = 500; // change back to 750 Time in milliseconds for the fixation cross inter-trial-interval
 const feedbackDisplayTime = 1500; // change back to 3000 Time in milliseconds for the feedback display
 const timeoutDuration = 4000; // change back to 5000 Time in milliseconds until the timeout is active
 const highProbability = 0.75;
 const lowProbability = 0.25;
 const block1 = 30;//change the block #s to change how many trials are done prior to reversals
-const block2 = 20;
+const block2 = 20;//Cole did [55, 45, 20, 20, 20]
 const block3 = 10;
 const block4 = 20;
 const block5 = 15;
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.getElementById('instruction-screen1').style.display = 'block';
 });
 
+//These event listeners let participants proceed through the instructions creens
 document.addEventListener('keydown', (event) => {
     if (document.getElementById('instruction-screen1').style.display === 'block') {
         document.getElementById('instruction-screen1').style.display = 'none';
@@ -32,8 +33,18 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+//randomizes the block order once at the start of  the game; trialLimits used inside of game set equal to  blocks at the end. 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+//
+const blocks = [block1, block2, block3, block4, block5, block6, block7, block8];
+shuffleArray(blocks);
 
-
+//Function that shuffles the fractals every 5 trials. 
 function shuffleFractals() {
     const fractalIDs = ['fractal1', 'fractal2', 'fractal3']; // Use IDs instead of numbers
     for (let i = fractalIDs.length - 1; i > 0; i--) {
@@ -43,6 +54,7 @@ function shuffleFractals() {
     return fractalIDs;
 }
 
+//defining the game object; most functions live within it.
 const game = {
     currentState: "choosing",
     trialStart: null,
@@ -60,7 +72,7 @@ const game = {
     ],
     currentProbIndex: 0,
     currentFractalPositions: ['fractal1', 'fractal2', 'fractal3'], // Initial order
-    trialLimits: [block1, block2, block3, block4, block5, block6, block7,block8],//Cole did [55, 45, 20, 20, 20]
+    trialLimits: blocks, //"blocks" is currently randomized outside game object
     timeout: null,
     keydownHandler: null,
 
