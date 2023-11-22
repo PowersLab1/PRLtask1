@@ -6,14 +6,14 @@ const delayToChoose = 500; //how long participants cannot choose a stimulus (pre
 const highProbability = 0.75;
 const lowProbability = 0.25;
 const trialsPerShuffle = 1; //the number of trials before the fractal images shuffle position
-const block1 = 30;//change the block #s to change how many trials are done prior to reversals
-const block2 = 20;//Cole did [55, 45, 20, 20, 20]
-const block3 = 10;
-const block4 = 20;
-const block5 = 15;
-const block6 = 20;
-const block7 = 25;
-const block8 = 15; // total is currently 150 trials
+const block1 = 2;//change the block #s to change how many trials are done prior to reversals
+const block2 = 2;//Cole did [55, 45, 20, 20, 20]
+const block3 = 2;
+const block4 = 2;
+const block5 = 2;
+const block6 = 2;
+const block7 = 2;
+const block8 = 2; // total is currently 150 trials
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
