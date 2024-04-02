@@ -74,61 +74,79 @@ class LabJsWrapper extends Component {
   //}
 
   componentDidMount() {
-    console.log('in compondentDidMount');
-    //console.log(that.state.encryptedMetadata);//this was in the original code
     
+    console.log('This is the latest labjswrapper.js')
     var that = this;
-    window.addEventListener('message', function(event) {
-      console.log('in EventListener');
 
+    const taskData = sessionStorage.getItem('taskData');
+    if (taskData) {
+      console.log('taskData found in sessionStorage');
+      const parsedData = JSON.parse(taskData);
+      // If localhost, we're done at this point
+      if (isLocalhost) {
+        console.log('in islocalhost');
+        console.log(that.surveyUrl);
+        if (that.surveyUrl) {
+          console.log('in that.surveyUrl');
+          that.setState({link: that.surveyUrl});
+        }
+        return;
+      }
+      that.setState({sendingData: true});
+      console.log('Im tryna call aws cuz i have session storage stuff');
+      that.setState({sendingData: true});
+      that.saveTaskDataWithRetry(parsedData, 11); // second number = how many attempts to make before giving up +1
+    }
+
+    window.addEventListener('message', function(event) {
       if (event.data.type === 'labjs.data') {
         const parsedData = JSON.parse(event.data.json);
-        console.log('in componentDidMount -- type = labjs.data');
-        // Print out debugging info if flag is set or we're on localhost
-        if (config.debug || isLocalhost) {
-          console.log(parsedData);
-          console.log(that.processLabJsData(parsedData));
-        }
 
-        // If localhost, we're done at this point
         if (isLocalhost) {
-          console.log('in islocalhost');
-          console.log(that.surveyUrl);
           if (that.surveyUrl) {
             console.log('in that.surveyUrl');
             that.setState({link: that.surveyUrl});
           }
           return;
         }
-        console.log('in componentDidMount -- after if statements');
-        console.log(that.state.encryptedMetadata);
-        console.log(parsedData);
+        
         that.setState({sendingData: true});
-        console.log('logging this')
-        console.log(this); //added this for debugging
-        console.log('logging that')
-        console.log(that); //added this for debugging
-        console.log('sending request')
-        aws_saveTaskData(that.state.encryptedMetadata, that.packageDataForExport(parsedData)).then(
-          () => {
-            console.log('sent data')
-            console.log(that.surveyUrl) //added for debugging
-            if (that.surveyUrl) {
-              that.setState({link: that.surveyUrl});
-            } else {
-              aws_fetchLink(that.state.encryptedMetadata).then(
-                (link) => that.setState({link: link})
-              ); //wise to add some additional handling here for when backend stuff goes down -- handling errors
-            }
-          }
-        );
+        that.saveTaskDataWithRetry(parsedData, 11); // second number = how many attempts to make before giving up +1
       }
-      aws_fetchLink(that.state.encryptedMetadata).then(
-        (link) => that.setState({link: link})
-      );
     });
-  
   }
+
+  saveTaskDataWithRetry(parsedData, attempts) {
+    const that = this;
+    console.log('new saveTaskData called')
+    aws_saveTaskData(that.state.encryptedMetadata, that.packageDataForExport(parsedData)).then(() => {
+      // Success path
+      that.handleDataSaveSuccess();
+    }).catch((error) => {
+      if (attempts > 1) {
+        setTimeout(() => {
+          console.log("Retrying to save task data...");
+          that.saveTaskDataWithRetry(parsedData, attempts - 1);
+        }, 2000); // Retry after 1 second delay
+      } else {
+        // Handle failure after retries
+        console.error("Failed to save task data after retries:", error);
+        // Consider alerting the user or other recovery options here
+      }
+    });
+  }
+
+  handleDataSaveSuccess() {
+    // Existing logic for handling successful data save...
+    if (this.surveyUrl) {
+      this.setState({link: this.surveyUrl});
+    } else {
+      aws_fetchLink(this.state.encryptedMetadata).then(
+        (link) => this.setState({link: link})
+      );
+    }
+  }
+
 
   addScript(src, callback) {
     const script = document.createElement("script");
@@ -162,7 +180,8 @@ class LabJsWrapper extends Component {
           </main>
         </div>
         <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
-          <h2>Saving data... do not exit window</h2>
+          <h2>Saving data... do not exit window. Check internet and Refresh if stuck here for over 30 seconds.</h2>
+          <p>If you lost internet connection during the game, then the game will restart and you will need to play again.</p>
         </div>
       </div>
     );
